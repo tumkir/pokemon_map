@@ -57,10 +57,7 @@ def show_pokemon(request, pokemon_id):
     except ObjectDoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
-    previous_evolution = pokemon.previous_evolution
-    next_evolutions = pokemon.next_evolutions.all()
-
-    if previous_evolution:
+    if pokemon.previous_evolution:
         previous_evolution = {
             'title_ru': pokemon.previous_evolution.title_ru,
             'pokemon_id': pokemon.previous_evolution.id,
@@ -69,11 +66,12 @@ def show_pokemon(request, pokemon_id):
     else:
         previous_evolution = {}
 
-    if next_evolutions:
+    if pokemon.next_evolutions.all():
+        evolution_stage = pokemon.next_evolutions.all()[0]
         next_evolution = {
-            'title_ru': pokemon.next_evolutions.all()[0].title_ru,
-            'pokemon_id': pokemon.next_evolutions.all()[0].id,
-            'img_url': pokemon.next_evolutions.all()[0].image.url
+            'title_ru': evolution_stage.title_ru,
+            'pokemon_id': evolution_stage.id,
+            'img_url': evolution_stage.image.url
         }
     else:
         next_evolution = {}
